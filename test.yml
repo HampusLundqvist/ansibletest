@@ -1,0 +1,7 @@
+- name: Just pause.. investigate running EE
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Pause for 10 minutes
+    ansible.builtin.pause:
+      minutes: 10
