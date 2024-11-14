@@ -1,0 +1,15 @@
+---
+- name: Get first unused disk
+  hosts: all
+  gather_facts: true
+  vars:
+      disk_devices_pattern: 'vd'
+  tasks:
+  - name: Set fact for the first unused disk 
+    ansible.builtin.set_fact:
+      # Get first disk device matching pattern that does not have any partitions or that is in use by lvm (e.g. linked device-mapper device ids)
+      free_disk: "{{ (ansible_devices | dict2items | selectattr('key', 'match', disk_devices_pattern) | rejectattr('value.partitions') | rejectattr('value.links.ids') | first).key }}"
+    
+  - name: Show free disk
+    ansible.builtin.debug:
+      var: free_disk
